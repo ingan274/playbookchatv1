@@ -7,7 +7,7 @@ let drafts;
 
 module.exports = {
     database: (client) => {
-        const dbName = 'playbookMessages';
+        const dbName = 'playbookMessagesV1';
         const database = client.db(dbName)
         // Check if collections exist, if not then create them and set validation
         let collections = database.listCollections().toArray()
