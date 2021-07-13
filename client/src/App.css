@@ -69,13 +69,13 @@
     padding-bottom: 20vh;
 }
 
-.otherMessage {
+/* .otherMessage {
     margin-right: 46.7%;
 }
 
 .Message {
     margin-left: 46.7%;
-}
+} */
 
 .indivMessage {
     margin-top: 15px;
@@ -104,7 +104,7 @@
 }
 
 .messageArea {
-    max-width: 19vw;
+    max-width: 30vw;
 }
 
 .timeDelivered {

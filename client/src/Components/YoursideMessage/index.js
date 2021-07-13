@@ -84,15 +84,7 @@ class YourSide extends Component {
                     <Box>{this.countdown()}</Box>
                 </Box>
             )
-        } else {
-            return (
-                <Box component="span" item="true" className="timeDetails deliveryTime">
-                    <Box>{this.sendingText()}:</Box>
-                    <Box>{this.props.timeDelivered}</Box>
-
-                </Box>
-            )
-        }
+        } 
     }
 
     messageColor = () => {
@@ -101,14 +93,14 @@ class YourSide extends Component {
 
         if (userID === this.props.userId && this.props.sending) {
             if (this.props.priority) {
-                return "rgb(190, 53, 53, .5)"
+                return "rgb(190, 53, 53, .7)"
             } else {
-                return "rgba(71, 112, 235, .5)"
+                return "rgba(71, 112, 235, .9)"
 
             }
         } else if (userID === this.props.userId && !this.props.sending) {
             if (this.props.obsolete) {
-                return "rgba(149, 149, 149, 0.70)"
+                return "rgba(149, 149, 149, 0.7)"
             } else {
                 if (this.props.priority) {
                     return "rgb(190, 53, 53, .7)"
@@ -251,19 +243,9 @@ class YourSide extends Component {
             <Box className="Message indivMessage otherCrew">
                 <Grid container
                     direction="row"
-                    justify="flex-start"
+                    justify="flex-end"
                     alignItems="center">
-                    {/* <Box item="true" direction="column" alignItems="center" justify="center" style={{ margin: "0px 10px 0px 0px" }} onMouseEnter={this.setSentTime(true)} onMouseLeave={this.setSentTime(false)}> */}
-                    <Box item="true" direction="column" alignItems="center" justify="center" className="centerDetails" style={{ margin: "0px 10px 0px 0px" }}>
-                        {/* {this.renderSentTime()} */}
-                        <Box item="true" className="timeDetails sentTime">
-                            <Box >Sent:</Box>
-                            <Box >{this.props.timeSent}</Box>
-                        </Box>
-                        <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
 
-                        <Box >{this.sendingandDeliveryRenderTL()}</Box>
-                    </Box>
                     <Box className="messageArea" item="true">
                         <Grid item container direction="column" alignItems="flex-start">
                             <Box item="true" className="userNameRole">{this.props.userName} <Box component="span" item="true" className="userRole">{this.props.userRole}</Box></Box>
@@ -278,12 +260,21 @@ class YourSide extends Component {
                                 <Box className="messageText" style={{ color: `${this.textColor()}`, fontWeight: `${this.priorityBody()}` }}>{this.props.messageMessageBody}</Box>
                                 {this.addPhoto()}
 
-                                {this.messageStatus()}
-                                {this.sendingandDeliveryRender()}
+                                {/* {this.messageStatus()} */}
+                                {/* {this.sendingandDeliveryRender()} */}
 
                             </Box>
                         </Grid>
-                        {this.iconsRender()}
+                    </Box>
+                    <Box item="true" direction="column" alignItems="center" justify="center" className="centerDetails" style={{ margin: "0px 10px 0px 0px" }}>
+                        {/* {this.renderSentTime()} */}
+                        <Box item="true" className="timeDetails sentTime">
+                            <Box >Sent:</Box>
+                            <Box >{this.props.timeSent}</Box>
+                        </Box>
+                        <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
+
+                        <Box >{this.sendingandDeliveryRenderTL()}</Box>
                     </Box>
 
                 </Grid>

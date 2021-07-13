@@ -9,7 +9,7 @@ class New extends Component {
 
     priorityIcon = () => {
         if (this.props.priority) {
-            return <PriorityHighOutlinedIcon color="action"/>
+            return <PriorityHighOutlinedIcon color="action" />
         }
     }
 
@@ -41,7 +41,7 @@ class New extends Component {
             } else {
                 return "rgba(149, 149, 149, 1)"
             }
-            
+
         }
     }
 
@@ -75,17 +75,9 @@ class New extends Component {
 
     render = () => {
         let userObj = JSON.parse(localStorage.getItem("User"));
-        let clientLocation = userObj.location
-        let messageLocation;
+        let clientUser = userObj.id
 
-        if (this.props.location) {
-            messageLocation = 'mars'
-        } else {
-            messageLocation = 'earth'
-        }
-
-
-        if (clientLocation === messageLocation) {
+        if (this.props.userId === clientUser) {
             if (this.props.attachment) {
                 return (
                     <YourSideMess
@@ -154,9 +146,16 @@ class New extends Component {
                 <Box className="otherMessage indivMessage">
                     <Grid container
                         direction="row"
-                        justify="flex-end"
+                        justify="flex-start"
                         alignItems="center">
+                        <Box item="true" direction="column" alignItems="center" justify="center" className="centerDetails" style={{ margin: "0px 0px 0px 10px" }}>
+                            <Box item="true" className="timeDetails sentTime">
+                                <Box >Sent:</Box>
+                                <Box >{this.props.timeSent}</Box>
+                            </Box>
+                            <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
 
+                        </Box>
                         <Box className="messageArea" item="true">
                             <Grid item container direction="column" alignItems="flex-start">
                                 <Box item="true" className="userNameRole">{this.props.userName}   <Box component="span" item="true" className="userRole">{this.props.userRole}</Box></Box>
@@ -168,22 +167,10 @@ class New extends Component {
                                     style={{ backgroundColor: `${this.messageColor()}` }}
                                 >
                                     <Box className="messageSubject" style={{ color: `${this.textColor()}`, fontSize: `${this.prioritySubject()}` }}>{this.priorityIcon()} {this.props.messageSubject}</Box>
-                                    <Box className="messageText" style={{ color: `${this.textColor()}`, fontWeight: `${this.priorityBody()}`  }}>{this.props.messageMessageBody}</Box>
+                                    <Box className="messageText" style={{ color: `${this.textColor()}`, fontWeight: `${this.priorityBody()}` }}>{this.props.messageMessageBody}</Box>
                                     {this.addPhoto()}
                                 </Box>
                             </Grid>
-                        </Box>
-                        <Box item="true" direction="column" alignItems="center" justify="center" className="centerDetails" style={{ margin: "0px 0px 0px 10px" }}>
-                            <Box item="true" className="timeDetails sentTime">
-                                <Box >Sent:</Box>
-                                <Box >{this.props.timeSent}</Box>
-                            </Box>
-                            <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
-                            <Box item="true" className="timeDetails deliveryTime">
-                                <Box >Delivered:</Box>
-                                <Box >{this.props.timeDelivered}</Box>
-                            </Box>
-
                         </Box>
                     </Grid>
                 </Box>

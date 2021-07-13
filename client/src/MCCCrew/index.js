@@ -30,7 +30,7 @@ class Playbook extends Component {
             chat: [],
             subject: "",
             messageBody: "",
-            priority: false,
+            // priority: false,
             nextDeliveryTime: "",
             currentTime: "",
             currentDate: "",
@@ -534,21 +534,6 @@ class Playbook extends Component {
                                                     <Button m={1} size="small" onClick={() => this.setState({ subjectLine: true })} color={subjectBtnColor}>Subject Line</Button>
                                                     <Button m={1} size="small" onClick={() => this.setState({ subjectLine: false })} color={imageBtnColor}>Image Link</Button>
                                                 </Box>
-                                                <Box mb={1} item="true">
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Switch
-                                                                size="small"
-                                                                checked={this.state.priority}
-                                                                onChange={this.handlePriority}
-                                                                name="priority"
-                                                                color="primary"
-                                                            />
-                                                        }
-                                                        label="Priority Message"
-
-                                                    />
-                                                </Box>
                                             </Grid>
                                             {this.subjectTypeRendering()}
                                             <TextField className="inputArea"
@@ -556,7 +541,7 @@ class Playbook extends Component {
                                                 size="small"
                                                 name="messageBody"
                                                 value={this.state.messageBody}
-                                                label={`Message (ETA - ${this.state.nextDeliveryTime})`}
+                                                label={`Text Message`}
                                                 onChange={this.handleInputChange}
                                                 onKeyPress={(ev) => {
                                                     if (ev.key === 'Enter') {

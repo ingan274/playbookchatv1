@@ -22,10 +22,18 @@ const dbs = async () => {
 dbs()
 
 
-const organizingMessages = (myTimeMessages) => {
+const organizingMessages = (myTimeMessages, otherTimeMessages) => {
 
     // Pushing Crew Message ID and Time Sent to Array
-    let allChatMessages = myTimeMessages.map((message, i) => {
+    let myTimeChatMessages = myTimeMessages.map((message, i) => {
+        return {
+            "id": message._id,
+            "time": message.timeSent,
+            "location": message.location
+        }
+    })
+
+    let otherChatMessages = otherTimeMessages.map((message, i) => {
         return {
             "id": message._id,
             "time": message.timeDelivered,
@@ -33,10 +41,11 @@ const organizingMessages = (myTimeMessages) => {
         }
     })
 
+    let allChatMessages = otherChatMessages.concat(myTimeChatMessages)
     // // Sorting Message based on Time
     allChatMessages.sort((item1, item2) => item1.time > item2.time ? 1 : -1);
 
-    // console.log(allChatMessages)
+    console.log(allChatMessages)
 
     return allChatMessages;
 }
@@ -66,22 +75,24 @@ module.exports = {
         let organizedMesObj;
         if (location === "mars") {
             // Crew Perspective
-            let deliveredMessages = await mcccrew.find({ sending: false })
+            let otherTimeMessages = await mcccrew.find({ location: false, sending: false })
                 .sort({ timeDelivered: 1 })
                 .toArray();
 
             // User sending messages
-            let userSendingMesage = await mcccrew.find({ location: true, sending: true, sender: userID })
-                .sort({ timeDelivered: 1 })
+            let userMessages = await mcccrew.find({ location: true, sender: userID, sending: true })
+                .sort({ timeSent: 1 })
+                .toArray();
+            let OtherMarsMessage = await mcccrew.find({ location: true, sending: false })
+                .sort({ timeSent: 1 })
                 .toArray();
 
-            let allMessages = userSendingMesage.concat(deliveredMessages)
+            let myTimeMessages = userMessages.concat(OtherMarsMessage)
             // console.log(allMessages)
-
-            // organizingMessages(myTimeMessages, otherTimeMessages);
+            let allMessages = myTimeMessages.concat(otherTimeMessages)
 
             if (allMessages.length > 0) {
-                let organizedMessages = organizingMessages(allMessages);
+                let organizedMessages = organizingMessages(myTimeMessages, otherTimeMessages);
 
                 organizedMesObj = organizedFullObjectMessages(organizedMessages, allMessages)
 
@@ -94,22 +105,24 @@ module.exports = {
 
         } else if (location === "earth") {
             // MCC Perspective
-            let deliveredMessages = await mcccrew.find({ sending: false })
+            let otherTimeMessages = await mcccrew.find({ location: true, sending: false })
                 .sort({ timeDelivered: 1 })
                 .toArray();
 
-            let userSendingMesage = await mcccrew.find({ location: false, sending: true })
-                .sort({ timeDelivered: 1 })
+            // User sending messages
+            let myTimeMessages = await mcccrew.find({ location: false })
+                .sort({ timeSent: 1 })
                 .toArray();
 
-            let allMessages = userSendingMesage.concat(deliveredMessages)
+            // console.log(allMessages)
+            let allMessages = myTimeMessages.concat(userMessages)
 
             if (allMessages.length > 0) {
-                let organizedMessages = organizingMessages(allMessages);
+                let organizedMessages = organizingMessages(myTimeMessages, otherTimeMessages);
 
                 organizedMesObj = organizedFullObjectMessages(organizedMessages, allMessages)
 
-                // Sending MCC-Crew MCC from Crew Perspective
+                // Sending MCC-Crew Chat from Crew Perspective
                 res.send(organizedMesObj);
             } else {
                 res.send([]);
@@ -117,8 +130,6 @@ module.exports = {
 
         }
 
-
-        return
     },
 
     // Find all messages for Just Crew Chat and organize by as received
