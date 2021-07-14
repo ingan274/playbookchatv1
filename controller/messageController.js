@@ -45,7 +45,7 @@ const organizingMessages = (myTimeMessages, otherTimeMessages) => {
     // // Sorting Message based on Time
     allChatMessages.sort((item1, item2) => item1.time > item2.time ? 1 : -1);
 
-    console.log(allChatMessages)
+    // console.log(allChatMessages)
 
     return allChatMessages;
 }
@@ -80,14 +80,10 @@ module.exports = {
                 .toArray();
 
             // User sending messages
-            let userMessages = await mcccrew.find({ location: true, sender: userID, sending: true })
-                .sort({ timeSent: 1 })
-                .toArray();
-            let OtherMarsMessage = await mcccrew.find({ location: true, sending: false })
+            let myTimeMessages = await mcccrew.find({ location: true })
                 .sort({ timeSent: 1 })
                 .toArray();
 
-            let myTimeMessages = userMessages.concat(OtherMarsMessage)
             // console.log(allMessages)
             let allMessages = myTimeMessages.concat(otherTimeMessages)
 
@@ -115,7 +111,7 @@ module.exports = {
                 .toArray();
 
             // console.log(allMessages)
-            let allMessages = myTimeMessages.concat(userMessages)
+            let allMessages = myTimeMessages.concat(otherTimeMessages)
 
             if (allMessages.length > 0) {
                 let organizedMessages = organizingMessages(myTimeMessages, otherTimeMessages);

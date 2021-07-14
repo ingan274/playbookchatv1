@@ -343,12 +343,12 @@ class Playbook extends Component {
     }
 
     handlePriorityUpdateAdd = (messageid, event) => {
-        API.handlePriority("add", {messageID: messageid})
+        API.handlePriority("add", { messageID: messageid })
     }
 
 
     handlePriorityUpdateRemove = (messageid, event) => {
-        API.handlePriority("remove", {messageID: messageid})
+        API.handlePriority("remove", { messageID: messageid })
     }
 
 
@@ -537,6 +537,7 @@ class Playbook extends Component {
                                             </Grid>
                                             {this.subjectTypeRendering()}
                                             <TextField className="inputArea"
+                                                autoFocus
                                                 variant="filled"
                                                 size="small"
                                                 name="messageBody"

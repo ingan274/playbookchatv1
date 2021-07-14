@@ -3,6 +3,7 @@ import "./style.css";
 import { Grid, Box, Avatar } from '@material-ui/core';
 import PriorityHighOutlinedIcon from '@material-ui/icons/PriorityHighOutlined';
 import YourSideMess from "../YoursideMessage"
+import moment from "moment";
 
 
 class New extends Component {
@@ -16,6 +17,43 @@ class New extends Component {
     addPhoto = () => {
         if (this.props.attachment) {
             return <img src={this.props.attachmentSrc} alt="upload" className="messageImage" />
+        }
+    }
+
+    sendingText = () => {
+        // return (this.props.sending ? "ETA" : "Estimated Deliverey");
+
+        if (this.props.sending && !this.props.expresp) {
+            return "ETA"
+        } else if (!this.props.sending && !this.props.expresp) {
+            return "Estimated Delivery"
+        } else if (!this.props.sending && this.props.expresp) {
+            return "Delivery"
+        }
+    };
+
+    countdown = () => {
+        let currentTime = moment();
+        let deliveryTime = moment(this.props.eta);
+        let remainingMilliSeconds = deliveryTime.diff(currentTime)
+        let display = moment(remainingMilliSeconds).format('mm:ss')
+        return display
+    }
+
+    sendingandDeliveryRenderTL = () => {
+
+        let currentTime = Date.now()
+
+        let deliveryTime = new Date(this.props.eta)
+        deliveryTime = deliveryTime.getTime()
+
+        if (currentTime < deliveryTime) {
+            return (
+                <Box component="span" item="true" className="timeDetails deliveryTime">
+                    <Box>Time Remaining:</Box>
+                    <Box>{this.countdown()}</Box>
+                </Box>
+            )
         }
     }
 
@@ -154,7 +192,7 @@ class New extends Component {
                                 <Box >{this.props.timeSent}</Box>
                             </Box>
                             <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
-
+                            <Box >{this.sendingandDeliveryRenderTL()}</Box>
                         </Box>
                         <Box className="messageArea" item="true">
                             <Grid item container direction="column" alignItems="flex-start">

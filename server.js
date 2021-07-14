@@ -5,7 +5,7 @@ const router = require("./router/index");
 // const morgan = require('morgan');
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 
 
 
@@ -29,7 +29,7 @@ app.listen(PORT, function () {
 
 
 // RUN THIS IN NGROK
-// ngrok http 3000 -host-header="localhost:3000"
+// ./ngrok http 2000 -host-header="localhost:2000"
 // ngrok http --host-header=rewrite 3000
 
 
