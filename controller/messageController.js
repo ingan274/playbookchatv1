@@ -350,8 +350,8 @@ module.exports = {
         }
 
         let message;
-        console.log(req.body.subjectLine)
-        if (req.body.subjectLine === "true") {
+        console.log(req.body.imageLink)
+        if (req.body.imageLink === "false") {
             const { originalname: image } = req.file;
             console.log(image)
             let filePath = `uploads/${image}`;

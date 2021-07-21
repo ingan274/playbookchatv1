@@ -1,7 +1,7 @@
 import "./style.css";
 import React, { Component } from "react";
-import { Grid, Box, Button, IconButton, TextField, InputAdornment, FormControlLabel, Switch } from '@material-ui/core';
-import { PhotoCamera, SendRounded, TextFields } from '@material-ui/icons';
+import { Grid, Box, Button, IconButton, TextField, InputAdornment, FormControlLabel } from '@material-ui/core';
+import { LocalConvenienceStoreOutlined, PhotoCamera, SendRounded } from '@material-ui/icons';
 import LinkIcon from '@material-ui/icons/Link';
 import dateTime from "../API-Calls/chatDelay"
 import API from "../API-Calls";
@@ -28,9 +28,8 @@ class Playbook extends Component {
             userImageURL: userObj.imageURL,
             profiles: profileArray,
             chat: [],
-            subject: "",
+            link: "",
             messageBody: "",
-            // priority: false,
             nextDeliveryTime: "",
             currentTime: "",
             currentDate: "",
@@ -38,7 +37,7 @@ class Playbook extends Component {
             currentBSON: "",
 
             uploadedImage: "",
-            subjectLine: true,
+            subjectLine: false,
         }
     }
 
@@ -136,75 +135,7 @@ class Playbook extends Component {
 
     handleSubmitMessage = event => {
         let newMesssage;
-        let subjectLine = this.state.subject
-        if (this.state.messageBody && this.state.uploadedImage === "" && this.state.subjectLine) {
-            let locationBool;
-            if (this.state.userLocation === "mars") {
-                locationBool = true;
-            } else {
-                locationBool = false;
-            }
-            // console.log(subjectLine.slice(0, 4))
-            if (subjectLine.slice(0, 4) === "http") {
-                newMesssage = new FormData();
-                console.log(this.state.subject)
-                let path = new URL(this.state.subject).pathname
-                path = path.substring(1)
-                // console.log(path)
-                if (this.state.messageBody.length > 0) {
-                    newMesssage.append("messageBody", this.state.messageBody)
-                } else {
-                    newMesssage.append("messageBody", "")
-                }
-
-
-                // This turns all booleans into strings!!
-                newMesssage.append("groupChat", "mcc-crew-chat")
-                newMesssage.append("messageSubject", "")
-                newMesssage.append("subjectLine", this.state.subjectLine)
-                newMesssage.append("imagePath", path)
-                newMesssage.append("urgent", false)
-                newMesssage.append("priority", false)
-                newMesssage.append("sender", this.state.userId)
-                newMesssage.append("location", locationBool)
-                newMesssage.append("sentTime", this.state.currentBSON)
-                newMesssage.append("deliveryTime", this.state.deliveryBSON)
-
-
-                console.log(path)
-                API.newMCCCrewPhoto(newMesssage);
-                this.setState({
-                    subject: "",
-                    messageBody: "",
-                })
-
-            } else {
-
-                newMesssage = {
-                    groupChat: "mcc-crew-chat",
-                    message: {
-                        subject: this.state.subject,
-                        messageBody: this.state.messageBody
-                    },
-                    urgent: false,
-                    priority: this.state.priority,
-                    priorityPressed: this.state.priority,
-                    sender: this.state.userId,
-                    location: locationBool,
-                    sentTime: this.state.currentBSON,
-                    deliveryTime: this.state.deliveryBSON,
-                }
-
-                API.newMCCCrew(newMesssage);
-
-                this.setState({
-                    subject: "",
-                    messageBody: ""
-                })
-            }
-
-            this.getMessages();
-        } else if (this.state.uploadedImage !== "") {
+        if (this.state.uploadedImage !== "") {
             let locationBool;
             if (this.state.userLocation === "mars") {
                 locationBool = true;
@@ -217,8 +148,7 @@ class Playbook extends Component {
             // This turns all booleans into strings!!
             newMesssage.append("groupChat", "mcc-crew-chat")
             newMesssage.append("messageBody", this.state.messageBody)
-            newMesssage.append("messageSubject", this.state.subject)
-            newMesssage.append("subjectLine", this.state.subjectLine)
+            newMesssage.append("imageLink", false)
             newMesssage.append("urgent", false)
             newMesssage.append("priority", this.state.priority)
             newMesssage.append("priorityPressed", this.state.priority)
@@ -227,17 +157,16 @@ class Playbook extends Component {
             newMesssage.append("sentTime", this.state.currentBSON)
             newMesssage.append("deliveryTime", this.state.deliveryBSON)
             newMesssage.append("imageData", imageData)
-            newMesssage.append("imageName", "image" + Date.now())
 
             API.newMCCCrewPhoto(newMesssage);
             this.setState({
-                subject: "",
+                link: "",
                 messageBody: "",
                 uploadedImage: ""
             })
             this.getMessages();
 
-        } else if (this.state.subjectLine === false) {
+        } else if (this.state.link !== "") {
 
             let locationBool;
             if (this.state.userLocation === "mars") {
@@ -248,7 +177,7 @@ class Playbook extends Component {
 
             newMesssage = new FormData();
             // console.log(this.state.subject)
-            let path = new URL(this.state.subject).pathname
+            let path = new URL(this.state.link).pathname
             path = path.substring(1)
             // console.log(path)
             if (this.state.messageBody.length > 0) {
@@ -261,7 +190,7 @@ class Playbook extends Component {
             // This turns all booleans into strings!!
             newMesssage.append("groupChat", "mcc-crew-chat")
             newMesssage.append("messageSubject", "")
-            newMesssage.append("subjectLine", this.state.subjectLine)
+            newMesssage.append("imageLink", true)
             newMesssage.append("imagePath", path)
             newMesssage.append("urgent", false)
             newMesssage.append("priority", false)
@@ -271,88 +200,44 @@ class Playbook extends Component {
             newMesssage.append("deliveryTime", this.state.deliveryBSON)
 
 
-            console.log(path)
+            // console.log(path)
             API.newMCCCrewPhoto(newMesssage);
             this.setState({
-                subject: "",
+                link: "",
                 messageBody: "",
             })
             this.getMessages();
-        }
-
-
-    }
-
-    subjectImageStateChange = (button) => {
-        if (button === "subject") {
-            this.setState({
-                subjectLine: true,
-            })
         } else {
+
+            let locationBool;
+            if (this.state.userLocation === "mars") {
+                locationBool = true;
+            } else {
+                locationBool = false;
+            }
+
+            newMesssage = {
+                groupChat: "mcc-crew-chat",
+                message: {
+                    messageBody: this.state.messageBody
+                },
+                urgent: false,
+                priority: this.state.priority,
+                priorityPressed: this.state.priority,
+                sender: this.state.userId,
+                location: locationBool,
+                sentTime: this.state.currentBSON,
+                deliveryTime: this.state.deliveryBSON,
+            }
+
+            API.newMCCCrew(newMesssage);
+
             this.setState({
-                subjectLine: false
+                messageBody: ""
             })
         }
-    }
 
-    subjectTypeRendering = () => {
-        if (this.state.subjectLine) {
-            return (
-                <TextField className="inputArea subjectURLInput"
-                    autoFocus
-                    variant="filled"
-                    name="subject"
-                    value={this.state.subject}
-                    id="filled-basic"
-                    onChange={this.handleInputChange}
-                    onKeyDown={this.keyPress}
-                    onKeyPress={(ev) => {
-                        // console.log(`Pressed keyCode ${ev.key}`);
-                        if (ev.key === 'Enter') {
-                            ev.preventDefault();
-                            this.handleSubmitMessage()
-                        }
-                    }}
 
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment className="inputIcon" position="start">
-                                <TextFields />
-                            </InputAdornment>
-                        ),
-                    }}
-
-                />
-            )
-        } else {
-            return (
-
-                <TextField className="inputArea subjectURLInput"
-                    autoFocus
-                    variant="filled"
-                    size="small"
-                    name="subject"
-                    value={this.state.subject}
-                    id="filled-basic"
-                    onChange={this.handleInputChange}
-                    onKeyDown={this.keyPress}
-                    onKeyPress={(ev) => {
-                        // console.log(`Pressed keyCode ${ev.key}`);
-                        if (ev.key === 'Enter') {
-                            ev.preventDefault();
-                            this.handleSubmitMessage()
-                        }
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment className="inputIcon" position="start">
-                                <LinkIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-            )
-        }
     }
 
     scrollBottom = () => {
@@ -367,41 +252,10 @@ class Playbook extends Component {
         }
     }
 
-    markObsolete = (messageid, event) => {
-        let messageID = messageid
-        // console.log(messageID)
-        const userUpdated = this.state.userName;
-        const timeUpdated = this.state.currentTime;
-
-        let udpateObject = {
-            messageID: messageID,
-            userUpdated: userUpdated,
-            timeUpdated: timeUpdated
-        }
-
-        API.markObsolete(udpateObject)
-    }
-
-    handlePriorityUpdateAdd = (messageid, event) => {
-        API.handlePriority("add", { messageID: messageid })
-    }
-
-
-    handlePriorityUpdateRemove = (messageid, event) => {
-        API.handlePriority("remove", { messageID: messageid })
-    }
-
-
-    handlePriority = (event) => {
-        const { name, checked } = event.target;
-        this.setState({
-            [name]: checked
-        })
-    };
-
     // Renderings
     renderMessages = () => {
 
+        // console.log(this.state.chat)
         if (this.state.chat.length > 0) {
             return (
                 <Box className="ChatBox chatMessDiv" item="true">
@@ -416,7 +270,7 @@ class Playbook extends Component {
                                     location={item.location}
                                     sending={item.sending}
                                     expresp={item.expected_resp}
-                                    messageSubject={item.message.subject}
+                                    // messageSubject={item.message.subject}
                                     messageMessageBody={item.message.messageBody}
                                     userName={this.getUserInfo(item.sender).name}
                                     userRole={this.getUserInfo(item.sender).role}
@@ -427,15 +281,6 @@ class Playbook extends Component {
                                     eta={item.timeDelivered}
                                     attachment={item.attachment.attachment}
                                     attachmentSrc={`/${item.attachment.imageData}`}
-                                    markObsolete={(ev) => this.markObsolete(item._id, ev)}
-                                    obsoletePress={item.obsoletePressed}
-                                    obsolete={item.obsolete.isObsolete}
-                                    obsoleteUser={item.obsolete.userChange}
-                                    obsoleteTime={item.obsolete.timeChange}
-                                    priority={item.priority}
-                                    priorityPress={item.priorityPressed}
-                                    priorityAdd={(ev) => this.handlePriorityUpdateAdd(item._id, ev)}
-                                    priorityRemove={(ev) => this.handlePriorityUpdateRemove(item._id, ev)}
                                 />
                             )
                         } else {
@@ -446,7 +291,7 @@ class Playbook extends Component {
                                     location={item.location}
                                     sending={item.sending}
                                     expresp={item.expected_resp}
-                                    messageSubject={item.message.subject}
+                                    // messageSubject={item.message.subject}
                                     messageMessageBody={item.message.messageBody}
                                     userName={this.getUserInfo(item.sender).name}
                                     userRole={this.getUserInfo(item.sender).role}
@@ -456,14 +301,6 @@ class Playbook extends Component {
                                     timeDelivered={this.getTime(item.timeDelivered)}
                                     eta={item.timeDelivered}
                                     markObsolete={(ev) => this.markObsolete(item._id, ev)}
-                                    obsolete={item.obsolete.isObsolete}
-                                    obsoletePress={item.obsoletePressed}
-                                    obsoleteUser={item.obsolete.userChange}
-                                    obsoleteTime={item.obsolete.timeChange}
-                                    priority={item.priority}
-                                    priorityPress={item.priorityPressed}
-                                    priorityAdd={(ev) => this.handlePriorityUpdateAdd(item._id, ev)}
-                                    priorityRemove={(ev) => this.handlePriorityUpdateRemove(item._id, ev)}
                                 />
                             )
                         }
@@ -502,17 +339,6 @@ class Playbook extends Component {
             previewImageStyle = { display: 'block' }
         }
 
-        let subjectBtnColor;
-        let imageBtnColor;
-
-        if (this.state.subjectLine) {
-            imageBtnColor = ""
-            subjectBtnColor = "primary"
-        } else {
-            imageBtnColor = "primary"
-            subjectBtnColor = ""
-        }
-
 
         return (
             <Grid
@@ -547,7 +373,6 @@ class Playbook extends Component {
                         </Box>
                         <Box>
                             {this.renderMessages()}
-
                             <Box className="ChatBox chatBoxInput mccinputarea">
 
                                 <form encType="multipart/form-data">
@@ -569,13 +394,32 @@ class Playbook extends Component {
                                             </Box>
                                         </Box>
                                         <Box item="true" className="form-control">
-                                            <Grid container direction="row" alignItems="center" justify="space-between" className="radiobuttonSubmission">
-                                                <Box>
-                                                    <Button m={1} size="small" onClick={() => this.setState({ subjectLine: true })} color={subjectBtnColor}>Subject Line</Button>
-                                                    <Button m={1} size="small" onClick={() => this.setState({ subjectLine: false })} color={imageBtnColor}>Image Link</Button>
-                                                </Box>
-                                            </Grid>
-                                            {this.subjectTypeRendering()}
+                                            <TextField className="inputArea subjectURLInput"
+                                                autoFocus
+                                                variant="filled"
+                                                size="small"
+                                                name="link"
+                                                label={`Image Link`}
+                                                value={this.state.link}
+                                                id="filled-basic"
+                                                onChange={this.handleInputChange}
+                                                onKeyDown={this.keyPress}
+                                                onKeyPress={(ev) => {
+                                                    // console.log(`Pressed keyCode ${ev.key}`);
+                                                    if (ev.key === 'Enter') {
+                                                        ev.preventDefault();
+                                                        this.handleSubmitMessage()
+                                                    }
+                                                }}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment className="inputIcon" position="start">
+                                                            <LinkIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+
                                             <TextField className="inputArea"
                                                 autoFocus
                                                 variant="filled"
@@ -592,11 +436,6 @@ class Playbook extends Component {
                                                 }}
                                                 multiline
                                                 inputProps={{
-                                                    style: {
-                                                        fontSize: '12px',
-                                                    },
-                                                }}
-                                                inputLabelProps={{
                                                     style: {
                                                         fontSize: '12px',
                                                     },
