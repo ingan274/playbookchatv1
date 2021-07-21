@@ -80,11 +80,12 @@ class New extends Component {
                                     className="chatBubble otherChatBbl messageArea"
                                     justify="center"
                                     alignItems="flex-start"
+                                    style={{backgroundColor: "rgba(149, 149, 149, 1)"}}
                                 >
                                     <Box className="messageSubject">{this.props.messageSubject}</Box>
                                     <Box className="messageText">{this.props.messageMessageBody}</Box>
                                     {this.addPhoto()}
-                                    <Box className="timeDelivered">
+                                    <Box className="timeDelivered" style={{color: "white"}}>
                                         {this.props.timeDelivered}
                                     </Box>
                                 </Box>

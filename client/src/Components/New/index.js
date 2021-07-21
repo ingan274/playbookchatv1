@@ -70,19 +70,6 @@ class New extends Component {
         this.props.priorityRemove("remove", messageID)
     }
 
-    messageColor = () => {
-        if (this.props.obsolete) {
-            return "rgba(149, 149, 149, 0.70)"
-        } else {
-            if (this.props.priority) {
-                return "rgb(190, 53, 53, .7)"
-            } else {
-                return "rgba(149, 149, 149, 1)"
-            }
-
-        }
-    }
-
     textColor = () => {
         if (this.props.obsolete) {
             return "rgba(225, 225, 225, 0.850)"
@@ -194,7 +181,7 @@ class New extends Component {
                             <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "30px", height: "30px", margin: "0px auto" }} />
                             <Box >{this.sendingandDeliveryRenderTL()}</Box>
                         </Box>
-                        <Box className="messageArea" item="true">
+                        <Box className="messageArea" item="true" >
                             <Grid item container direction="column" alignItems="flex-start">
                                 <Box item="true" className="userNameRole">{this.props.userName}   <Box component="span" item="true" className="userRole">{this.props.userRole}</Box></Box>
 
@@ -202,7 +189,7 @@ class New extends Component {
                                     className={`chatBubble otherChatBbl ${this.priorityClass()}`}
                                     justify="center"
                                     alignItems="flex-start"
-                                    style={{ backgroundColor: `${this.messageColor()}` }}
+                                    style={{backgroundColor: "rgba(149, 149, 149, 1)"}}
                                 >
                                     <Box className="messageSubject" style={{ color: `${this.textColor()}`, fontSize: `${this.prioritySubject()}` }}>{this.priorityIcon()} {this.props.messageSubject}</Box>
                                     <Box className="messageText" style={{ color: `${this.textColor()}`, fontWeight: `${this.priorityBody()}` }}>{this.props.messageMessageBody}</Box>
