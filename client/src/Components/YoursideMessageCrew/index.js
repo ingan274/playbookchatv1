@@ -63,12 +63,10 @@ class YourSide extends Component {
             <Box className="Message indivMessage otherCrew" style={{ opacity: `${this.props.opacity}` }}>
                 <Grid container
                     direction="row"
-                    justify="flex-start"
+                    justify="flex-end"
                     alignItems="center">
-                         <Box item="true" style={{margin: "0px 10px 0px 5px " }}>
-                        <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "45px", height: "45px" }} />
-                    </Box>
-                    <Box item="true" >
+
+                    <Box className="messageArea" item="true" >
                         <Grid item container direction="column" alignItems="flex-start">
                             <Box item="true" className="userNameRole">{this.props.userName}   <Box component="span" item="true" className="userRole">{this.props.userRole}</Box></Box>
 
@@ -76,7 +74,7 @@ class YourSide extends Component {
                                 className="chatBubble otherChatBbl"
                                 justify="center"
                                 alignItems="flex-start"
-                                style={{backgroundColor: `${this.messageColor()}` }}
+                                style={{ backgroundColor: `${this.messageColor()}` }}
                             >
                                 <Box className="messageSubject">{this.props.messageSubject}</Box>
                                 <Box className="messageText">{this.props.messageMessageBody}</Box>
@@ -87,7 +85,9 @@ class YourSide extends Component {
                             </Box>
                         </Grid>
                     </Box>
-                   
+                    <Box item="true" style={{ margin: "0px 10px 0px 5px " }}>
+                        <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "45px", height: "45px" }} />
+                    </Box>
                 </Grid>
             </Box>
         )

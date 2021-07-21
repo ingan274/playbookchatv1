@@ -67,14 +67,17 @@ class New extends Component {
                 <Box className="otherMessage indivMessage">
                     <Grid container
                         direction="row"
-                        justify="flex-end"
+                        justify="flex-start"
                         alignItems="center">
+                        <Box item="true" style={{ margin: "0px 5px 0px 10px " }}>
+                            <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "45px", height: "45px" }} />
+                        </Box>
                         <Box item="true" >
                             <Grid item container direction="column" alignItems="flex-start">
                                 <Box item="true" className="userNameRole">{this.props.userName}   <Box component="span" item="true" className="userRole">{this.props.userRole}</Box></Box>
 
                                 <Box item="true"
-                                    className="chatBubble otherChatBbl"
+                                    className="chatBubble otherChatBbl messageArea"
                                     justify="center"
                                     alignItems="flex-start"
                                 >
@@ -87,9 +90,7 @@ class New extends Component {
                                 </Box>
                             </Grid>
                         </Box>
-                        <Box item="true" style={{margin: "0px 5px 0px 10px " }}>
-                            <Avatar item="true" alt={`${this.props.userId}`} src={`${this.props.userImageURL}`} className="avatar" style={{ width: "45px", height: "45px" }} />
-                        </Box>
+
                     </Grid>
                 </Box>
             )

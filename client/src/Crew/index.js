@@ -290,7 +290,7 @@ class Playbook extends Component {
                                         justify="space-between"
                                         alignItems="center">
                                         <Box item="true">
-                                            <input accept="image/*" className="attachment" id="imageUploadMCC" type="file" onChange={this.uploadImagemcc} />
+                                            <input accept="image/*" className="attachment" id="imageUploadMCC" type="file" onChange={this.uploadImage} />
                                             <label htmlFor="imageUploadMCC">
                                                 <IconButton aria-label="upload picture" component="span">
                                                     <PhotoCamera />

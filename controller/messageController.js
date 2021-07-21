@@ -351,7 +351,7 @@ module.exports = {
 
         let message;
         console.log(req.body.subjectLine)
-        if (req.body.subjectLine === true) {
+        if (req.body.subjectLine === "true") {
             const { originalname: image } = req.file;
             console.log(image)
             let filePath = `uploads/${image}`;
