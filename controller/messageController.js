@@ -1,5 +1,7 @@
 const { ObjectID } = require("bson");
 const mongoConnect = require('../connect');
+const sharp = require('sharp');
+// const path = require('path');
 
 let mcccrew;
 let crew;
@@ -329,8 +331,6 @@ module.exports = {
         } else {
             priority = false
         }
-
-
         if (req.body.priorityPressed === "true") {
             priorityPressed = true
         } else {
@@ -348,8 +348,67 @@ module.exports = {
         } else {
             location = false
         }
-        let message
-        if (req.body.subjectLine === "false") {
+
+        let message;
+        console.log(req.body.subjectLine)
+        if (req.body.subjectLine === true) {
+            const { originalname: image } = req.file;
+            console.log(image)
+            let filePath = `uploads/${image}`;
+
+            await sharp(req.file.buffer)
+                .resize({ width: 1200 })
+                .withMetadata()
+                .toFile(filePath)
+
+            message = {
+                groupChat: "mcc-crew-chat",
+                message: {
+                    subject: "",
+                    messageBody: req.body.messageBody,
+                },
+                priority: priority,
+                priorityPressed: priorityPressed,
+                urgent: urgent,
+                parent: {
+                    hasParent: false,
+                },
+                obsoletePressed: false,
+                obsolete: {
+                    isObsolete: false,
+                    userChange: "",
+                    timeChange: ""
+                },
+                sending: true,
+                expected_resp: false,
+                sender: req.body.sender,
+                timeSent: req.body.sentTime,
+                timeDelivered: req.body.deliveryTime,
+                location: location,
+                attachment: {
+                    attachment: true,
+                    imageData: filePath
+                }
+            }
+
+            if (req.body.reminder) {
+                message.reminder = req.body.reminder
+            }
+
+            await mcccrew.insertOne(message)
+                .then(result => {
+                    console.log(result.ops[0])
+                    res.send(result.ops[0])
+                    console.log("Chat has been submitted to MCC Crew Chat")
+                })
+                .catch((status, err) => {
+                    console.log(err)
+                    res.sendStatus(status)
+                });
+
+            return
+
+        } else {
             message = {
                 groupChat: "mcc-crew-chat",
                 message: {
@@ -379,56 +438,25 @@ module.exports = {
                     imageData: req.body.imagePath
                 }
             }
-        } else {
-            message = {
-                groupChat: "mcc-crew-chat",
-                message: {
-                    subject: req.body.messageSubject,
-                    messageBody: req.body.messageBody,
-                },
-                priority: priority,
-                priorityPressed: priorityPressed,
-                urgent: urgent,
-                obsoletePressed: false,
-                obsolete: {
-                    isObsolete: false,
-                    userChange: "",
-                    timeChange: ""
-                },
-                parent: {
-                    hasParent: false,
-                },
-                sending: true,
-                expected_resp: false,
-                sender: req.body.sender,
-                timeSent: req.body.sentTime,
-                timeDelivered: req.body.deliveryTime,
-                location: location,
-                attachment: {
-                    attachment: true,
-                    imageData: req.file.path,
-                    imageName: req.body.imageName
-                }
+
+            if (req.body.reminder) {
+                message.reminder = req.body.reminder
             }
+
+            await mcccrew.insertOne(message)
+                .then(result => {
+                    console.log(result.ops[0])
+                    res.send(result.ops[0])
+                    console.log("Chat has been submitted to MCC Crew Chat")
+                })
+                .catch((status, err) => {
+                    console.log(err)
+                    res.sendStatus(status)
+                });
+
+            return
         }
 
-
-
-        if (req.body.reminder) {
-            message.reminder = req.body.reminder
-        }
-
-        // console.log(message)
-        await mcccrew.insertOne(message)
-            .then(result => {
-                console.log(result.ops[0])
-                res.send(result.ops[0])
-                console.log("Chat has been submitted to MCC Crew Chat")
-            })
-            .catch((status, err) => {
-                console.log(err)
-                res.sendStatus(status)
-            });
     },
 
     // New Crew Chat Message
@@ -459,14 +487,29 @@ module.exports = {
 
     newMessageCrewPhoto: async (req, res) => {
         // console.log("initial path")
-        // console.log(req.file.path)
+        // console.log(req.file)
+        // console.log(req.file.buffer)
         // console.log("Object")
+        const { originalname: image } = req.file;
+        let filePath = `uploads/${image}`;
+
+        await sharp(req.file.buffer)
+            .resize({ width: 1200 })
+            .withMetadata()
+            .toFile(filePath)
+
+        let messageBody;
+        if (req.body.messageBody === "") {
+            messageBody = ""
+        } else {
+            messageBody = req.body.messageBody
+        }
 
         let message = {
             groupChat: "crew-chat",
             message: {
-                subject: req.body.messageSubject,
-                messageBody: req.body.messageBody,
+                subject: "",
+                messageBody: messageBody,
             },
             parent: {
                 hasParent: false,
@@ -475,8 +518,7 @@ module.exports = {
             timeDelivered: req.body.deliveryTime,
             attachment: {
                 attachment: true,
-                imageData: req.file.path,
-                imageName: req.body.imageName
+                imageData: filePath
             }
         }
 
@@ -495,6 +537,8 @@ module.exports = {
                 console.log(err)
                 res.sendStatus(status)
             });
+
+
     },
 
 

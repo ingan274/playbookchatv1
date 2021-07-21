@@ -144,7 +144,7 @@ class Playbook extends Component {
             } else {
                 locationBool = false;
             }
-            console.log(subjectLine.slice(0, 4))
+            // console.log(subjectLine.slice(0, 4))
             if (subjectLine.slice(0, 4) === "http") {
                 newMesssage = new FormData();
                 console.log(this.state.subject)
@@ -217,7 +217,8 @@ class Playbook extends Component {
             // This turns all booleans into strings!!
             newMesssage.append("groupChat", "mcc-crew-chat")
             newMesssage.append("messageBody", this.state.messageBody)
-            newMesssage.append("messageSubject", this.state.subject,)
+            newMesssage.append("messageSubject", this.state.subject)
+            newMesssage.append("subjectLine", this.state.subjectLine)
             newMesssage.append("urgent", false)
             newMesssage.append("priority", this.state.priority)
             newMesssage.append("priorityPressed", this.state.priority)
