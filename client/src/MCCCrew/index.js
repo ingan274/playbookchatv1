@@ -49,7 +49,7 @@ class Playbook extends Component {
         // Get Messages every 1 seconds
         setInterval(() => {
             this.getMessages();
-        }, 1000);
+        }, 800);
 
         // Scroll Down
         let cycle = 1
@@ -300,7 +300,6 @@ class Playbook extends Component {
                                     timeSent={this.getTime(item.timeSent)}
                                     timeDelivered={this.getTime(item.timeDelivered)}
                                     eta={item.timeDelivered}
-                                    markObsolete={(ev) => this.markObsolete(item._id, ev)}
                                 />
                             )
                         }
